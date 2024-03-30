@@ -6,8 +6,12 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.RequestHandler;
 
 public class HttpRequestUtils {
+    private static final Logger log = LoggerFactory.getLogger(HttpRequestUtils.class);
     /**
      * @param queryString은
      *            URL에서 ? 이후에 전달되는 field1=value1&field2=value2 형식임
@@ -34,6 +38,13 @@ public class HttpRequestUtils {
         String[] tokens = values.split(separator);
         return Arrays.stream(tokens).map(t -> getKeyValue(t, "=")).filter(p -> p != null)
                 .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
+    }
+
+    public static String getUrl(String line){
+        String[] tokens = line.split(" ");
+        String url = tokens[1];
+        log.debug("request path : {}", url);
+        return url;
     }
 
     static Pair getKeyValue(String keyValue, String regex) {
