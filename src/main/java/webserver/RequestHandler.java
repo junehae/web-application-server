@@ -47,10 +47,8 @@ public class RequestHandler extends Thread {
 
                 line = br.readLine();
             }
-
-
             //회원가입
-            if (url.startsWith("/user/create")){
+            if (url.contains("/user/create")){
                 String path = IOUtils.readData(br, contentLen);
                 Map<String, String> params = HttpRequestUtils.parseQueryString(path);
                 User user = new User(params.get("userId"), params.get("password"), params.get("name"), params.get("email"));
@@ -110,10 +108,7 @@ public class RequestHandler extends Thread {
                 responseBody(dos, body);
             }
             else{
-                DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = Files.readAllBytes(new File("./webapp" + url).toPath());
-                response200Header(dos, body.length);
-                responseBody(dos, body);
+                responseResource(out, url);
             }
         } catch (IOException e) {
             log.error(e.getMessage());
